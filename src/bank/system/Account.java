@@ -10,22 +10,42 @@ import java.util.Scanner;
     private BigDecimal pesel;
     private BigDecimal login;
     private double depositedCash;
+
+    Menu menu = new Menu();
+    Scanner scanner = new Scanner(System.in);
+    Account account = new Account();
+
+     public String getName() {
+
+        return name;
+
+    }
+
+     public String getSurname() {
+
+         return surname;
+
+     }
+
+     public BigDecimal getPesel() {
+
+         return pesel;
+
+     }
+
+     public BigDecimal getLogin() {
+
+         return login;
+
+     }
 /*
-     public Account() {
+     public double getDepositedCash() {
 
-         this.name = "";
-         this.surname = "";
-         this.pesel = BigDecimal.valueOf(0);
-         this.login = BigDecimal.valueOf(0);
-         this.depositedCash = 0.0f;
+         return depositedCash;
 
-     }*/
+     }
 
-
-/*
-    public static void createNewAccount() {
-
-        menu.showTheMenu();
+     public static void createNewAccount() {
 
         System.out.print("Put your first name: ");
         account.name = scanner.nextLine();
@@ -34,13 +54,14 @@ import java.util.Scanner;
         System.out.print("Put your personal identity number(PESEL): ");
         account.pesel = scanner.nextBigDecimal();
         System.out.print("Your account has been just successfully created.");
+
     }
 
-    public void removeTheAccount() {
+     public void removeTheAccount() {
 
      }
 
-    public void depositCash() {
+     public void depositCash() {
 
         menu.showTheMenu();
 
@@ -89,19 +110,19 @@ import java.util.Scanner;
 
     }
 
-    public void withdrawCash() {
+     public void withdrawCash() {
 
     }
 
-    public void transferCash() {
+     public void transferCash() {
 
     }
 
-    public void showOneClient() {
+     public void showOneClient() {
 
     }
 
-    public void showAllClients() {
+     public void showAllClients() {
 
     }
 */
