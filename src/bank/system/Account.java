@@ -7,13 +7,14 @@ import java.util.Scanner;
     private String name;
     private String surname;
     private Long personalIdNumber;
-    private Long login;
-    private String password;
+    protected Long login;
+    protected String password;
     private Long depositedCash;
 
-    private Scanner scanner = new Scanner(System.in);
-    private Account account = new Account();
-    private Menu menu = new Menu();
+    Scanner scanner = new Scanner(System.in);
+    Account account = new Account();
+    Menu menu = new Menu();
+    Authorization authorization = new Authorization();
 
     public void createNewAccount() {
 
@@ -36,9 +37,48 @@ import java.util.Scanner;
 
         menu.showTheMenu();
 
-        System.out.print("Put the value of money you would like to pay into: ");
-        account.depositedCash = Long.parseLong(scanner.nextLine());
-        System.out.print("The money have been deposited.");
+        int condition;
+        boolean authorizationCondition = authorization.signingIn();
+
+        if (authorizationCondition) {
+
+            System.out.print("Put the value of money you would like to pay into: ");
+            account.depositedCash = Long.parseLong(scanner.nextLine());
+            System.out.print("The money have been deposited.");
+
+        }
+
+        else {
+
+            System.out.print("You have just put wrong login or password.");
+            System.out.print("Would you like continue(1) or break(2) the operation?");
+            condition = scanner.nextInt();
+
+            while(true) {
+
+                if (condition == 1) {
+
+                    depositCash();
+
+                }
+
+                else if( condition == 2) {
+
+                    break;
+
+                }
+
+                else {
+
+                    System.out.println("Put right number: ");
+                    System.out.println("1 - Continue this operation.");
+                    System.out.println("2 - Break this operation.");
+                    condition = scanner.nextInt();
+
+                }
+            }
+
+        }
 
     }
 
