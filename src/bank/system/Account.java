@@ -1,22 +1,29 @@
 package bank.system;
 
+import java.math.BigDecimal;
 import java.util.Scanner;
 
  public class Account {
 
     private String name;
     private String surname;
-    private Long personalIdNumber;
-    protected Long login;
-    protected String password;
-    private Long depositedCash;
+    private BigDecimal pesel;
+    private BigDecimal login;
+    private double depositedCash;
+/*
+     public Account() {
 
-    Scanner scanner = new Scanner(System.in);
-    Account account = new Account();
-    Menu menu = new Menu();
-    Authorization authorization = new Authorization();
+         this.name = "";
+         this.surname = "";
+         this.pesel = BigDecimal.valueOf(0);
+         this.login = BigDecimal.valueOf(0);
+         this.depositedCash = 0.0f;
 
-    public void createNewAccount() {
+     }*/
+
+
+/*
+    public static void createNewAccount() {
 
         menu.showTheMenu();
 
@@ -24,14 +31,14 @@ import java.util.Scanner;
         account.name = scanner.nextLine();
         System.out.print("Put your surname: ");
         account.surname = scanner.nextLine();
-        System.out.print("Put your personal identity number: ");
-        account.personalIdNumber = Long.parseLong(scanner.nextLine());
-        System.out.print("Put your account login(8 numbers): ");
-        account.login = Long.parseLong(scanner.nextLine());
-        System.out.print("Put your password: ");
-        account.password = scanner.nextLine();
+        System.out.print("Put your personal identity number(PESEL): ");
+        account.pesel = scanner.nextBigDecimal();
         System.out.print("Your account has been just successfully created.");
     }
+
+    public void removeTheAccount() {
+
+     }
 
     public void depositCash() {
 
@@ -43,7 +50,7 @@ import java.util.Scanner;
         if (authorizationCondition) {
 
             System.out.print("Put the value of money you would like to pay into: ");
-            account.depositedCash = Long.parseLong(scanner.nextLine());
+            account.depositedCash = scanner.nextDouble();
             System.out.print("The money have been deposited.");
 
         }
@@ -81,5 +88,23 @@ import java.util.Scanner;
         }
 
     }
+
+    public void withdrawCash() {
+
+    }
+
+    public void transferCash() {
+
+    }
+
+    public void showOneClient() {
+
+    }
+
+    public void showAllClients() {
+
+    }
+*/
+
 
  }

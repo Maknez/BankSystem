@@ -17,7 +17,7 @@ public class Authorization extends Account {
         authorization.tempLogin = Long.parseLong(scanner.nextLine());
         System.out.print("Password: ");
         authorization.tempPassword = scanner.nextLine();
-
+/*
         if(tempLogin == account.login) {
 
             if(tempPassword == account.password) {
@@ -27,7 +27,7 @@ public class Authorization extends Account {
             }
 
         }
-
+*/
             return false;
 
     }
