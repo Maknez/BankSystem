@@ -166,4 +166,12 @@ public class Database implements Serializable {
 
     }
 
+    public void isIDDuplicated(BigDecimal id) throws IDDuplicatedException {
+        for (BigDecimal ID : database.keySet()) {
+            if (database.get(ID).getLogin().equals(id)) {
+                throw new IDDuplicatedException();
+            }
+        }
+    }
+
 }

@@ -1,19 +1,14 @@
 package bank.system;
 
-
-import java.util.Scanner;
+import java.io.IOException;
 
 public class BankApplication {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
-        Scanner scanner = new Scanner(System.in);
+        BankSystem bankSystem = new BankSystem();
+        bankSystem.startApplication();
 
-        Menu menu = new Menu();
-        /*Authorization authorization = new Authorization();
-        Account account = new Account();
-*/
-        menu.showTheMenu();
     }
 
 }
