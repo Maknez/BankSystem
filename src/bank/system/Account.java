@@ -1,221 +1,195 @@
 package bank.system;
 
+import java.io.*;
 import java.math.BigDecimal;
 import java.util.InputMismatchException;
 import java.util.Scanner;
-import java.io.IOException;
 
- public class Account extends BankSystem{
 
-    private String name;
-    private String surname;
-    private BigDecimal pesel;
-    private BigDecimal login;
-    private double depositedCash;
+public class Account implements Serializable{
 
-    Menu menu = new Menu();
-    Scanner scanner = new Scanner(System.in);
+    private         String          name;
+    private         String          surname;
+    private         BigDecimal      PESEL;
+    private         String          address;
+    private         BigDecimal      ID;
+    private         double          balance;
+    private static  Scanner         scnr;
 
-     public Account(String name, String surname, BigDecimal pesel, BigDecimal login) throws IOException {
-         this.name = name;
-         this.surname = surname;
-         this.pesel = pesel;
-         this.login = login;
-     }
+    static {
+        scnr = new Scanner(System.in);
+    }
 
-     public String getName() {
-
+    public String getName() {
         return name;
-
+    }
+    public String getSurname() {
+        return surname;
+    }
+    public BigDecimal getPESEL() {
+        return PESEL;
+    }
+    public String getAddress() {
+        return address;
+    }
+    public BigDecimal getID() {
+        return ID;
+    }
+    public double getBalance() {
+        return balance;
     }
 
-     public String getSurname() {
-
-         return surname;
-
-     }
-
-     public BigDecimal getPesel() {
-
-         return pesel;
-
-     }
-
-     public BigDecimal getLogin() {
-
-         return login;
-
-     }
-
-     public double getDepositedCash() {
-
-         return depositedCash;
-
-     }
-
-     public static void createNewAccount(Database database) throws IOException {
-         Scanner scanner = new Scanner(System.in);
-         String name;
-         String surname;
-         BigDecimal pesel;
-         BigDecimal login;
-
-         try {
-             System.out.print("Insert clients name: ");
-             name = scanner.nextLine();
-             System.out.print("Insert clients surname: ");
-             surname = scanner.nextLine();
-             System.out.print("Insert clients pesel number: ");
-             pesel = scanner.nextBigDecimal();
-             scanner.nextLine();
-             System.out.print("Adding original and unique clients login number: ");
-             login = scanner.nextBigDecimal();
-             scanner.nextLine();
-             try {
-                 database.isIDDuplicated(login);
-                 database.put(login, new Account(name, surname, pesel, login));
-             }
-             catch(IDDuplicatedException e) {
-                 System.out.println("\nID of value: [" + login +"] already exists in database.");
-                 System.out.println("Choose another ID for this client.\n");
-                 createNewAccount(database);
-             }
-             database.saveToFile(database.getName());
-             System.out.println("\n\nAccount created succesfully, has been added to database.");
-             System.out.println("[" + login + "]   " + name + " " + surname);
-         }
-         catch(InputMismatchException e) {
-             System.out.println("\nPESEL and ID fields require only numbers.");
-             System.out.println("Type proper values.\n");
-             scanner.nextLine();
-             createNewAccount(database);
-         }
-
+    public Account(String name, String surname, BigDecimal PESEL, String address, BigDecimal ID) {
+        this.name = name;
+        this.surname = surname;
+        this.PESEL = PESEL;
+        this.address = address;
+        this.ID = ID;
     }
 
-     public void removeTheAccount(Database database) {
+    public static void addAccount(Database database) {
+        String name;
+        String surname;
+        BigDecimal PESEL;
+        String address;
+        BigDecimal ID;
 
-         database.getDatabase().remove(this.getLogin());
-         System.out.println("\nAccount: " + this.getLogin() + " has been removed from databse.");
-         database.saveToFile(database.getName());
-
-     }
-
-     public void depositCash() {
-
-         System.out.print("Amount to deposit to [" + this.login +"]: ");
-         try {
-             double value = scanner.nextDouble();
-             scanner.nextLine();
-             this.depositedCash = getDepositedCash() + value;
-             System.out.println(value + " euro has been has been added to " + this.getLogin());
-         }
-         catch(InputMismatchException e ) {
-             System.out.println("\nDeposit value contains only float numbers.\n");
-             scanner.nextLine();
-             depositCash();
-         }
-
+        try {
+            System.out.print("Insert clients name: ");
+            name = scnr.nextLine();
+            System.out.print("Insert clients surname: ");
+            surname = scnr.nextLine();
+            System.out.print("Insert clients PESEL number: ");
+            PESEL = scnr.nextBigDecimal();
+            scnr.nextLine();
+            System.out.print("Insert clients address: ");
+            address = scnr.nextLine();
+            System.out.print("Adding original and unique clients ID number: ");
+            ID = scnr.nextBigDecimal();
+            scnr.nextLine();
+            try {
+                database.isIDDuplicated(ID);
+                database.put(ID, new Account(name, surname, PESEL, address, ID));
+            }
+            catch(IDDuplicatedException e) {
+                System.out.println("\nID of value: [" + ID +"] already exists in database.");
+                System.out.println("Choose another ID for this client.\n");
+                addAccount(database);
+            }
+            System.out.println("\n\nAccount created succesfully, has been added to database.");
+            System.out.println("[" + ID + "]   " + name + " " + surname);
+        }
+        catch(InputMismatchException e) {
+            System.out.println("\nPESEL and ID fields require only numbers.");
+            System.out.println("Type proper values.\n");
+            scnr.nextLine();
+            addAccount(database);
+        }
     }
 
-     public void withdrawCash() {
-
-             System.out.print("Amount to withdraw from [" + this.getLogin() + "]: ");
-             double value = scanner.nextDouble();
-             depositedCash = getDepositedCash() - value;
-
-             System.out.println(value + " euro has been withdrawn from " + this.getLogin());
-
-     }
-
-     public void transferCash(Account secondAccount) {
-
-         try {
-
-             System.out.print("Cash amount to transfer: ");
-             double value = scanner.nextDouble();
-             depositedCash = getDepositedCash() - value;
-             secondAccount.depositedCash = secondAccount.depositedCash+ value;
-             System.out.println("Cash value of " + value + " has been transfered to account of ID: " + secondAccount.getLogin());
-
-         }
-
-         catch(InputMismatchException e ) {
-
-             System.out.println("Inproper cash value.");
-             System.out.print("Do you want to try again? PRESS 'Y', press anything else to abort: ");
-
-             if(scanner.nextLine().equals("Y") || scanner.nextLine().equals("y")) {
-
-                 transferCash(secondAccount);
-
-             }
-
-         }
-
-
+    public void removeAccount(Database database) {
+        try {
+            confirm();
+            database.getDatabase().remove(this.getID());
+            System.out.println("\nAccount: " + this.getID() + " has been removed from databse.");
+            database.saveToFile(database.getName());
+        }
+        catch(ConfirmationException e) {
+            System.out.println("\nAccount of ID: " + this.getID() + " hasn't been removed from database.");
+        }
     }
 
-     public void showOneClient() throws InputMismatchException, IOException {
-         int choice;
-         try {
-             choice = scanner.nextInt();
-             scanner.nextLine();
-             switch (choice) {
-                 case 1:
-                     System.out.print("\nEnter a name: ");
-                     String name = scanner.nextLine();
-                     accountsDatabase.searchByName(name).printAllClients();
-                     if (menu.continueTheApplication() == 1) {
-                         startApplication();
-                     }
-                     break;
-                 case 2:
-                     System.out.print("\nEnter a surname: ");
-                     String surname = scanner.nextLine();
-                     accountsDatabase.searchBySurname(surname).printAllClients();
-                     if (menu.continueTheApplication() == 1) {
-                         startApplication();
-                     }
-                     break;
-                 case 3:
-                     System.out.print("\nEnter login: ");
-                     BigDecimal login = scanner.nextBigDecimal();
-                     scanner.nextLine();
-                     accountsDatabase.searchByID(login).printAllClients();
-                     if (menu.continueTheApplication() == 1) {
-                         startApplication();
-                     }
-                     break;
-                 case 4:
-                     System.out.print("\nEnter pesel: ");
-                     BigDecimal pesel = scanner.nextBigDecimal();
-                     scanner.nextLine();
-                     accountsDatabase.searchByPESEL(pesel).printAllClients();
-                     if (menu.continueTheApplication() == 1) {
-                         startApplication();
-                     }
-                     break;
-
-                 default:
-                     System.out.println("\nUnidentified operation. Choose from 1-5 to choose proper searching number. ID, PESEL contains only integer numbers.");
-                     menu.showSearchMenu();
-                     showOneClient();
-                     break;
-             }
-         }
-         catch(InputMismatchException e ) {
-             System.out.println("\nUnidentified operation. Choose from 1-5 to choose proper searching number. ID, PESEL contains only integer numbers.");
-             scanner.nextLine();
-             menu.showSearchMenu();
-             showOneClient();
-         }
+    public void transfer(Account account2) {
+        try {
+            double value;
+            do {
+                System.out.print("Cash amount to transfer: ");
+                value = scnr.nextDouble();
+                if (value <= 0) {
+                    System.out.println("Do you really want to send this amount of money??");
+                    System.out.println("Try again");
+                }
+            } while (value <= 0);
+            confirm();
+            balance = getBalance() - value;
+            account2.balance = account2.balance + value;
+            System.out.println("Cash value of " + value + " has been transfered to account of ID: " + account2.getID());
+        }
+        catch(InputMismatchException e ) {
+            System.out.println("Inproper cash value.");
+            System.out.print("Do you want to try again? PRESS 'Y', press anything else to abort: ");
+            if(scnr.nextLine().equals("Y") || scnr.nextLine().equals("y")) {
+                transfer(account2);
+            }
+        }
+        catch(ConfirmationException e) {
+            System.out.println("Money haven't been transfered from account" + this.getID() + " to account" + account2.getID());
+        }
     }
 
-     public void showAllClients() {
+    public void withdraw() {
+        try {
+            System.out.print("Amount to withdraw from [" + this.getID() + "]: ");
+            double value = scnr.nextDouble();
+            confirm();
+            balance = getBalance() - value;
 
+            System.out.println(value + " euro has been withdrawn from " + this.getID());
+        }
+        catch(ConfirmationException e) {
+            System.out.println("Operation of withdrawing cash from account: " + this.getID() + "has been aborted");
+        }
     }
 
+    public void deposit() {
+        System.out.print("Amount to deposit to [" + this.ID +"]: ");
+        try {
+            double value = scnr.nextDouble();
+            scnr.nextLine();
+            confirm();
+            this.balance = getBalance() + value;
+            System.out.println(value + " euro has been has been added to " + this.getID());
+        }
+        catch(ConfirmationException e) {
+            System.out.println("\nOperation of deposit has been aborted\n");
+        }
+        catch(InputMismatchException e ) {
+            System.out.println("\nDeposit value contains only float numbers.\n");
+            scnr.nextLine();
+            deposit();
+        }
+    }
 
+    public void displayAccountInformation() {
+        System.out.println("\nAccount of ID: " + this.getID() + "\n");
+        System.out.println("Name: " + this.getName());
+        System.out.println("Surname: " + this.getSurname());
+        System.out.println("PESEL: " + this.getPESEL());
+        System.out.println("Address of client: " + this.getAddress());
+        System.out.println("Available cash: " + this.getBalance() + "\n");
+    }
 
- }
+    private void confirm() throws ConfirmationException{
+        System.out.print("\nType 'C' if you want to CONFIRM operation or 'A' if you want to ABORT: ");
+        String option = scnr.nextLine();
+        if(option.equals("C") || option.equals("c")) {
+
+        }
+        else if(option.equals("A") || option.equals("a")) {
+            throw new ConfirmationException();
+        }
+        else {
+            System.out.println("Unhandled option.");
+            confirm();
+        }
+    }
+
+    public String toString() {
+        return ("\n\nAccount of ID: " + this.getID() + "\n\n" +
+                "Name: " + this.getName() + "\n" +
+                "Surname: " + this.getSurname() + "\n" +
+                "PESEL: " + this.getPESEL() + "\n" +
+                "Address of client: " + this.getAddress() + "\n" +
+                "Available cash: " + this.getBalance());
+    }
+}
