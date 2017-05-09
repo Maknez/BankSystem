@@ -189,6 +189,7 @@ public class BankSystem implements Serializable {
                     System.out.println("\nUnidentified operation. Choose from 1-8 to choose proper opearation");
                     break;
             }
+            accountsDatabase.saveToFile(databaseName);
         }while(choice != 0);
     }
     private void searchMenu() {
