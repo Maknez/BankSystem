@@ -1,37 +1,32 @@
 package bank.system;
 
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.InputMismatchException;
 import java.util.Scanner;
-
 import static bank.system.Account.*;
-
 
 public class BankSystem implements Serializable {
 
-    private Account     accountRef1;
-    private Account     accountRef2;
-    private Database    accountsDatabase;
-    private String      databaseName;
-    private Scanner     scnr;
-
+    private Account accountRef1;
+    private Account accountRef2;
+    private Database accountsDatabase;
+    private String databaseName;
+    private Scanner scnr;
 
     public BankSystem() {
         scnr = new Scanner(System.in);
         this.setDatabase();
         this.menu();
     }
-
     private void setDatabase() {
         Database.printDatabases();
-        System.out.println("Bank management application - TUI Version\n");
-        System.out.println("Enter (E) to load EXISTING database on server");
-        System.out.println("Enter (N) to create NEW database on server");
+        System.out.println("Bank application\n");
+        System.out.println("Enter (L) to LOAD EXISTING database");
+        System.out.println("Enter (C) to CREATE NEW database");
         String choose = scnr.nextLine();
-        if(choose.contains("e") || choose.contains("E")) {
+        if(choose.equals("L") || choose.equals("l")) {
             System.out.print("\nType name of EXISTING database: ");
             try {
                 databaseName = scnr.nextLine();
@@ -48,7 +43,7 @@ public class BankSystem implements Serializable {
                 setDatabase();
             }
         }
-        else if(choose.contains("n") || choose.contains("N")) {
+        else if(choose.contains("c") || choose.contains("C")) {
             System.out.print("\nType name of NEW database file you want to create: ");
             try {
                 databaseName = scnr.nextLine();
@@ -65,7 +60,6 @@ public class BankSystem implements Serializable {
             setDatabase();
         }
     }
-
     private void setAccountRef1() {
         System.out.print("Insert ID of account: ");
         try {
@@ -87,7 +81,6 @@ public class BankSystem implements Serializable {
             setAccountRef1();
         }
     }
-
     private void setAccountRef2() {
         System.out.print("\nInsert ID of account where you want to transfer money: ");
         try {
@@ -100,7 +93,6 @@ public class BankSystem implements Serializable {
             setAccountRef1();
         }
     }
-
     private void menu() {
         int choice;
         do {
@@ -117,10 +109,12 @@ public class BankSystem implements Serializable {
 
             switch (choice) {
                 case 1:
+                    System.out.println("\n\n\n\n\n");
                     addAccount(accountsDatabase);
                     choice = 1;
                     break;
                 case 2:
+                    System.out.println("\n\n\n\n\n");
                     if(isDataBaseEmpty()) {
                         System.out.println("\nDatabase is EMPTY.\n");
                         menu();
@@ -130,11 +124,13 @@ public class BankSystem implements Serializable {
                     choice = 1;
                     break;
                 case 3:
+                    System.out.println("\n\n\n\n\n");
                     printSearchMenu();
                     searchMenu();
                     choice = 1;
                     break;
                 case 4:
+                    System.out.println("\n\n\n\n\n");
                     if(isDataBaseEmpty()) {
                         System.out.println("\nDatabase is EMPTY.\n");
                         menu();
@@ -144,6 +140,7 @@ public class BankSystem implements Serializable {
                     choice = 1;
                     break;
                 case 5:
+                    System.out.println("\n\n\n\n\n");
                     if(isDataBaseEmpty()) {
                         System.out.println("\nDatabase is EMPTY.\n");
                         menu();
@@ -153,16 +150,23 @@ public class BankSystem implements Serializable {
                     choice = 1;
                     break;
                 case 6:
+                    System.out.println("\n\n\n\n\n");
                     if(isDataBaseEmpty()) {
                         System.out.println("\nDatabase is EMPTY.\n");
                         menu();
                     }
-                    setAccountRef1();
-                    setAccountRef2();
+                    do {
+                        setAccountRef1();
+                        setAccountRef2();
+                        if (accountRef1 == accountRef2) {
+                            System.out.println("You cannot send money to yourself. Try again");
+                        }
+                    }   while (accountRef1 == accountRef2);
                     accountRef1.transfer(accountRef2);
                     choice = 1;
                     break;
                 case 7:
+                    System.out.println("\n\n\n\n\n");
                     if(isDataBaseEmpty()) {
                         System.out.println("\nDatabase is EMPTY.\n");
                         menu();
@@ -172,6 +176,7 @@ public class BankSystem implements Serializable {
                     choice = 1;
                     break;
                 case 8:
+                    System.out.println("\n\n\n\n\n");
                     accountsDatabase.printAllClients();
                     choice = 1;
                     break;
@@ -186,7 +191,6 @@ public class BankSystem implements Serializable {
             }
         }while(choice != 0);
     }
-
     private void searchMenu() {
         int choice;
         try {
@@ -197,100 +201,72 @@ public class BankSystem implements Serializable {
                     System.out.print("\nEnter a name: ");
                     String name = scnr.nextLine();
                     accountsDatabase.searchByName(name).printAllClients();
-                    if (isContinued() == -1) {
-                        menu();
-                    }
+                    menu();
                     break;
                 case 2:
                     System.out.print("\nEnter a surname: ");
                     String surname = scnr.nextLine();
                     accountsDatabase.searchBySurname(surname).printAllClients();
-                    if (isContinued() == -1) {
-                        menu();
-                    }
+                    menu();
                     break;
                 case 3:
                     System.out.print("\nEnter an address: ");
                     String address = scnr.nextLine();
                     accountsDatabase.searchByAddress(address).printAllClients();
-                    isContinued();
                     break;
                 case 4:
                     System.out.print("\nEnter ID: ");
                     BigDecimal ID = scnr.nextBigDecimal();
                     scnr.nextLine();
                     accountsDatabase.searchByID(ID).printAllClients();
-                    if (isContinued() == -1) {
-                        menu();
-                    }
+                    menu();
                     break;
                 case 5:
                     System.out.print("\nEnter PESEL: ");
                     BigDecimal PESEL = scnr.nextBigDecimal();
                     scnr.nextLine();
                     accountsDatabase.searchByPESEL(PESEL).printAllClients();
-                    if (isContinued() == -1) {
-                        menu();
-                    }
+                    menu();
                     break;
                 default:
-                    System.out.println("\nUnidentified operation. Choose from 1-5 to choose proper searching number. ID, PESEL contains only integer numbers.");
+                    System.out.println("\nBAD OPERATION. Choose from 1-5 to choose proper searching number. ID and PESEL contains only integer numbers.");
                     printSearchMenu();
                     searchMenu();
                     break;
             }
         }
         catch(InputMismatchException e ) {
-            System.out.println("\nUnidentified operation. Choose from 1-5 to choose proper searching number. ID, PESEL contains only integer numbers.");
+            System.out.println("\nBAD OPERATION. Choose from 1-5 to choose proper searching number. ID and PESEL contains only integer numbers.");
             scnr.nextLine();
             printSearchMenu();
             searchMenu();
         }
     }
-
     private void printMenu() {
-        System.out.println("\nBank management application - TUI Version\n");
-        System.out.println("1. Add an account");
-        System.out.println("2. Remove an account");
-        System.out.println("3. Search an account");
-        System.out.println("4. Deposit cash");
-        System.out.println("5. Withdraw cash");
-        System.out.println("6. Transfer cash");
-        System.out.println("7. Display an account information");
-        System.out.println("8. Print all clients in database");
-        System.out.println("0. Exit application\n\n");
+        System.out.println("------------------------");
+        System.out.println("----Bank application----");
+        System.out.println("------------------------\n");
+        System.out.println("1. ADD an account");
+        System.out.println("2. REMOVE an account");
+        System.out.println("3. SEARCH an account");
+        System.out.println("4. DEPOSIT cash");
+        System.out.println("5. WITHDRAW cash");
+        System.out.println("6. TRANSFER cash");
+        System.out.println("7. PRINT an account information");
+        System.out.println("8. PRINT all clients in database");
+        System.out.println("0. EXIT application\n\n");
         System.out.print("Enter: ");
     }
-
     private void printSearchMenu() {
+        System.out.println("\n\n\n\n");
         System.out.println("\n\nSearching accountant\n");
-        System.out.println("1. Search by name");
-        System.out.println("2. Search by surname");
-        System.out.println("3. Search by address");
+        System.out.println("1. Search by NAME");
+        System.out.println("2. Search by SURNAME");
+        System.out.println("3. Search by ADRESS");
         System.out.println("4. Search by ID");
         System.out.println("5. Search by PESEL\n\n");
         System.out.print("Enter: ");
     }
-
-    private int isContinued() {
-        String yesOrNo;
-        System.out.print("\n\nDo you want to continue? (Y/N): ");
-        yesOrNo = new String(scnr.nextLine());
-
-        if (yesOrNo.equals("y") || yesOrNo.equals("Y")) {
-            return -1;
-        }
-        else if (yesOrNo.equals("n") || yesOrNo.equals("N")) {
-            accountsDatabase.saveToFile(databaseName);
-            System.exit(0);
-            return 0;
-        }
-        else {
-            System.out.println("\nInproper value. Type 'Y' to continue or 'N' to quit.");
-            return isContinued();
-        }
-    }
-
     private boolean isDataBaseEmpty() {
         if (accountsDatabase.getDatabase().isEmpty()) {
             return true;

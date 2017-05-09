@@ -5,21 +5,19 @@ import java.math.BigDecimal;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+public class Account implements Serializable {
 
-public class Account implements Serializable{
-
-    private         String          name;
-    private         String          surname;
-    private         BigDecimal      PESEL;
-    private         String          address;
-    private         BigDecimal      ID;
-    private         double          balance;
-    private static  Scanner         scnr;
+    private String name;
+    private String surname;
+    private BigDecimal PESEL;
+    private String address;
+    private BigDecimal ID;
+    private double balance;
+    private static Scanner scnr;
 
     static {
         scnr = new Scanner(System.in);
     }
-
     public String getName() {
         return name;
     }
@@ -38,7 +36,6 @@ public class Account implements Serializable{
     public double getBalance() {
         return balance;
     }
-
     public Account(String name, String surname, BigDecimal PESEL, String address, BigDecimal ID) {
         this.name = name;
         this.surname = surname;
@@ -46,7 +43,6 @@ public class Account implements Serializable{
         this.address = address;
         this.ID = ID;
     }
-
     public static void addAccount(Database database) {
         String name;
         String surname;
@@ -86,7 +82,6 @@ public class Account implements Serializable{
             addAccount(database);
         }
     }
-
     public void removeAccount(Database database) {
         try {
             confirm();
@@ -98,7 +93,6 @@ public class Account implements Serializable{
             System.out.println("\nAccount of ID: " + this.getID() + " hasn't been removed from database.");
         }
     }
-
     public void transfer(Account account2) {
         try {
             double value;
@@ -110,6 +104,7 @@ public class Account implements Serializable{
                     System.out.println("Try again");
                 }
             } while (value <= 0);
+            scnr.nextLine();
             confirm();
             balance = getBalance() - value;
             account2.balance = account2.balance + value;
@@ -126,11 +121,17 @@ public class Account implements Serializable{
             System.out.println("Money haven't been transfered from account" + this.getID() + " to account" + account2.getID());
         }
     }
-
     public void withdraw() {
         try {
-            System.out.print("Amount to withdraw from [" + this.getID() + "]: ");
-            double value = scnr.nextDouble();
+            double value;
+            do {
+                System.out.print("Amount to withdraw from [" + this.getID() + "]: ");
+                value = scnr.nextDouble();
+                if (value <= 0) {
+                    System.out.println("You cannot withdraw this amount of money. Try again");
+                }
+            } while (value <= 0);
+            scnr.nextLine();
             confirm();
             balance = getBalance() - value;
 
@@ -140,11 +141,17 @@ public class Account implements Serializable{
             System.out.println("Operation of withdrawing cash from account: " + this.getID() + "has been aborted");
         }
     }
-
     public void deposit() {
-        System.out.print("Amount to deposit to [" + this.ID +"]: ");
+
         try {
-            double value = scnr.nextDouble();
+            double value;
+            do {
+                System.out.print("Amount to deposit to [" + this.ID +"]: ");
+                value = scnr.nextDouble();
+                if (value <= 0) {
+                    System.out.println("You cannot send this amount of money. Try again");
+                }
+            } while (value <= 0);
             scnr.nextLine();
             confirm();
             this.balance = getBalance() + value;
@@ -159,7 +166,6 @@ public class Account implements Serializable{
             deposit();
         }
     }
-
     public void displayAccountInformation() {
         System.out.println("\nAccount of ID: " + this.getID() + "\n");
         System.out.println("Name: " + this.getName());
@@ -168,7 +174,6 @@ public class Account implements Serializable{
         System.out.println("Address of client: " + this.getAddress());
         System.out.println("Available cash: " + this.getBalance() + "\n");
     }
-
     private void confirm() throws ConfirmationException{
         System.out.print("\nType 'C' if you want to CONFIRM operation or 'A' if you want to ABORT: ");
         String option = scnr.nextLine();
@@ -183,7 +188,6 @@ public class Account implements Serializable{
             confirm();
         }
     }
-
     public String toString() {
         return ("\n\nAccount of ID: " + this.getID() + "\n\n" +
                 "Name: " + this.getName() + "\n" +

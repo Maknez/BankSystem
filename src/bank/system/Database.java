@@ -1,9 +1,9 @@
 package bank.system;
+
 import java.io.*;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
-
 
 public class Database implements Serializable {
 
@@ -14,24 +14,18 @@ public class Database implements Serializable {
         this.name = name;
         database = new HashMap<BigDecimal, Account>();
     }
-
     public Map<BigDecimal, Account> getDatabase() {
         return database;
     }
-
-
     public String getName() {
         return name;
     }
-
     public Account get(BigDecimal index) {
         return database.get(index);
     }
-
     public void put(BigDecimal index, Account acc) {
         database.put(index, acc);
     }
-
     public void saveToFile(String name) {
         boolean success = new File("databases").mkdir();
         try (FileOutputStream file = new FileOutputStream("databases/" + name + ".baz");
@@ -41,7 +35,6 @@ public class Database implements Serializable {
             System.out.println("DATABASE_LOAD_ERROR. Typed database DOESN'T EXIST or cannot be loaded properly.");
         }
     }
-
     public Database load(String name) throws IOException {
         Database database = null;
         FileInputStream file = new FileInputStream("databases/" + name + ".baz");
@@ -53,7 +46,6 @@ public class Database implements Serializable {
         }
         return database;
     }
-
     public void printAllClients() {
         if (database.isEmpty()) {
             System.out.println("Database is EMPTY");
@@ -62,7 +54,6 @@ public class Database implements Serializable {
             System.out.println(database.get(ID).toString());
         }
     }
-
     public Database searchByName(String name) {
         Database output = new Database("temp");
         for (BigDecimal ID : database.keySet()) {
@@ -72,7 +63,6 @@ public class Database implements Serializable {
         }
         return output;
     }
-
     public Database searchBySurname(String surname) {
         Database output = new Database("temp");
         for (BigDecimal ID : database.keySet()) {
@@ -82,7 +72,6 @@ public class Database implements Serializable {
         }
         return output;
     }
-
     public Database searchByAddress(String address) {
         Database output = new Database("temp");
         for (BigDecimal ID : database.keySet()) {
@@ -92,7 +81,6 @@ public class Database implements Serializable {
         }
         return output;
     }
-
     public Database searchByID(BigDecimal id) {
         Database output = new Database("temp");
         for (BigDecimal ID : database.keySet()) {
@@ -102,7 +90,6 @@ public class Database implements Serializable {
         }
         return output;
     }
-
     public Database searchByPESEL(BigDecimal PESEL) {
         Database output = new Database("temp");
         for (BigDecimal ID : database.keySet()) {
@@ -112,7 +99,6 @@ public class Database implements Serializable {
         }
         return output;
     }
-
     public void isIDDuplicated(BigDecimal id) throws IDDuplicatedException {
         for (BigDecimal ID : database.keySet()) {
             if (database.get(ID).getID().equals(id)) {
@@ -120,12 +106,11 @@ public class Database implements Serializable {
             }
         }
     }
-
     public static void printDatabases() {
         File databases = new File("databases/");
         String[] databases2 = databases.list();
         try {
-            System.out.println("Clients databases: \n");
+            System.out.println("Existing databases: \n");
             for(int i = 0; i < databases2.length; i++) {
                 System.out.println(databases2[i]);
             }
@@ -135,5 +120,4 @@ public class Database implements Serializable {
             System.out.println("\nThere is no existing databases. Create NEW one.\n");
         }
     }
-
 }
