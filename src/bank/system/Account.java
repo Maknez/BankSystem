@@ -51,16 +51,16 @@ public class Account implements Serializable {
         BigDecimal ID;
 
         try {
-            System.out.print("Insert clients name: ");
+            System.out.print("Insert name: ");
             name = scnr.nextLine();
-            System.out.print("Insert clients surname: ");
+            System.out.print("Insert surname: ");
             surname = scnr.nextLine();
-            System.out.print("Insert clients PESEL number: ");
+            System.out.print("Insert PESEL number: ");
             PESEL = scnr.nextBigDecimal();
             scnr.nextLine();
-            System.out.print("Insert clients address: ");
+            System.out.print("Insert address: ");
             address = scnr.nextLine();
-            System.out.print("Adding original and unique clients ID number: ");
+            System.out.print("Insert original and unique clients ID number: ");
             ID = scnr.nextBigDecimal();
             scnr.nextLine();
             try {

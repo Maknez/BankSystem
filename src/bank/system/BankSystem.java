@@ -243,6 +243,7 @@ public class BankSystem implements Serializable {
         }
     }
     private void printMenu() {
+        System.out.println("\n\n\n\n\n");
         System.out.println("------------------------");
         System.out.println("----Bank application----");
         System.out.println("------------------------\n");
